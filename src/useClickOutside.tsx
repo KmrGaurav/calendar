@@ -1,12 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 interface UseClickOutsideProps {
   callback: () => void;
 }
 
-function useClickOutside<T extends HTMLElement>({
-  callback
-}: UseClickOutsideProps) {
+function useClickOutside<T extends HTMLElement>({ callback }: UseClickOutsideProps) {
   const ref = useRef<T>(null);
 
   useEffect(() => {
@@ -16,10 +14,10 @@ function useClickOutside<T extends HTMLElement>({
       }
     };
 
-    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener('mousedown', handleOutsideClick);
 
     return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, []);
 

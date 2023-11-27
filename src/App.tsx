@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import Popup from './Popup';
+import Event from './Event';
 
 enum PopupMode {
   Month,
@@ -9,21 +10,22 @@ enum PopupMode {
   Century
 }
 
+export const months = [
+  'January',
+  'Feburary',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
+
 export default function App() {
-  const months = [
-    'January',
-    'Feburary',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
   const DAYS_IN_CALENDAR_MONTH = 42;
 
   const getFirstDateOfCalendar = (fullYear: number, month: number) => {
@@ -108,7 +110,8 @@ export default function App() {
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    width: '100%'
+                    width: '100%',
+                    gap: '10px'
                   }}
                 >
                   <button onClick={() => setCurrentCalendarYear((prev) => prev - 1)}>&lt;</button>
@@ -139,7 +142,8 @@ export default function App() {
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    width: '100%'
+                    width: '100%',
+                    gap: '10px'
                   }}
                 >
                   <button onClick={() => setCurrentCalendarYear((prev) => prev - 20)}>&lt;</button>
@@ -184,25 +188,10 @@ export default function App() {
         </div>
 
         <div className="dates">
-          {currentCalendarDates.map((currentCalendarDate) => {
-            return (
-              <div
-                className={`date 
-              ${currentCalendarDate.getMonth() === currentCalendarMonth ? '' : 'greyed'}
-              ${
-                currentCalendarDate.getDate() === new Date().getDate() &&
-                currentCalendarDate.getMonth() === new Date().getMonth() &&
-                currentCalendarDate.getFullYear() === new Date().getFullYear()
-                  ? 'current-date'
-                  : ''
-              }`}
-                key={currentCalendarDate.getTime()}
-              >
-                {currentCalendarDate.getDate()}{' '}
-                {months[currentCalendarDate.getMonth()].substring(0, 3)}
-              </div>
-            );
-          })}
+          <Event
+            currentCalendarDates={currentCalendarDates}
+            currentCalendarMonth={currentCalendarMonth}
+          />
         </div>
       </div>
     </div>
