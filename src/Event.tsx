@@ -1,65 +1,77 @@
 import { useState } from 'react';
 
 import useLocalStorage from './useLocalStorage';
+
 import { months } from './App';
 import Popup from './Popup';
 
 interface IProps {
-  currentCalendarDates: Date[];
-  currentCalendarMonth: number;
+    currentCalendarDates: Date[];
+    currentCalendarMonth: number;
 }
 
+type TInput = {
+    [date: number]: string;
+};
+
 export default function Event({ currentCalendarDates, currentCalendarMonth }: IProps) {
-  const [events, setEvents] = useLocalStorage();
-  const [showInputPopup, setShowInputPopup] = useState(false);
+    const [events, setEvents] = useLocalStorage<TInput>('LOCAL_STORAGE_KEY_FOR_EVENTS', {});
+    const [showInputPopup, setShowInputPopup] = useState(false);
 
-  const [inputDate, setInputDate] = useState<Date>(new Date());
+    const [inputDate, setInputDate] = useState<Date>(new Date());
 
-  const handleClickOnDate = (date: Date) => {
-    setShowInputPopup(true);
-    setInputDate(date);
-  };
+    const handleClickOnDate = (date: Date) => {
+        setShowInputPopup(true);
+        setInputDate(date);
+    };
 
-  const handleOnChangeTextarea = (e: any) => {
-    setEvents(e.target.value);
-  };
+    const handleOnChangeTextarea = (e: any) => {
+        setEvents({
+            ...events,
+            [getDateNumber(inputDate)]: e.target.value
+        });
+    };
 
-  let displayedValue = '';
-  try {
-    displayedValue = JSON.parse(events).event || '';
-  } catch (error) {
-    // Handle the error, for example, log it or set a default value
-    console.error('Error parsing JSON:', error);
-  }
-
-  return (
-    <>
-      {currentCalendarDates.map((currentCalendarDate) => {
-        return (
-          <div
-            className={`date 
-        ${currentCalendarDate.getMonth() === currentCalendarMonth ? '' : 'greyed'}
-        ${
-          currentCalendarDate.getDate() === new Date().getDate() &&
-          currentCalendarDate.getMonth() === new Date().getMonth() &&
-          currentCalendarDate.getFullYear() === new Date().getFullYear()
-            ? 'current-date'
-            : ''
-        }`}
-            key={currentCalendarDate.getTime()}
-            onClick={() => handleClickOnDate(currentCalendarDate)}
-          >
-            {currentCalendarDate.getDate()} {months[currentCalendarDate.getMonth()].substring(0, 3)}
-          </div>
+    const getDateNumber = (date: Date) => {
+        return Number(
+            date.getFullYear().toString() +
+                date.getMonth().toString().padStart(2, '0') +
+                date.getDate().toString().padStart(2, '0')
         );
-      })}
+    };
 
-      <Popup show={showInputPopup} onClose={() => setShowInputPopup(false)} closeButton>
-        <div className="month-year-heading">{`${inputDate.getDate()} ${
-          months[inputDate.getMonth()]
-        } ${inputDate.getFullYear()}`}</div>
-        <textarea className="event" value={displayedValue} onChange={handleOnChangeTextarea} />
-      </Popup>
-    </>
-  );
+    return (
+        <>
+            {currentCalendarDates.map((currentCalendarDate) => {
+                return (
+                    <div
+                        className={`date 
+                            ${currentCalendarDate.getMonth() === currentCalendarMonth ? '' : 'greyed'}
+                            ${
+                                currentCalendarDate.getDate() === new Date().getDate() &&
+                                currentCalendarDate.getMonth() === new Date().getMonth() &&
+                                currentCalendarDate.getFullYear() === new Date().getFullYear()
+                                    ? 'current-date'
+                                    : ''
+                            }`}
+                        key={currentCalendarDate.getTime()}
+                        onClick={() => handleClickOnDate(currentCalendarDate)}
+                    >
+                        {currentCalendarDate.getDate()} {months[currentCalendarDate.getMonth()].substring(0, 3)}
+                    </div>
+                );
+            })}
+
+            <Popup show={showInputPopup} onClose={() => setShowInputPopup(false)} closeButton>
+                <div className="month-year-heading">{`${inputDate.getDate()} ${
+                    months[inputDate.getMonth()]
+                } ${inputDate.getFullYear()}`}</div>
+                <textarea
+                    className="event"
+                    value={events[getDateNumber(inputDate)]}
+                    onChange={handleOnChangeTextarea}
+                />
+            </Popup>
+        </>
+    );
 }
