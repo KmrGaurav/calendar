@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import useLocalStorage from './useLocalStorage';
+import useLocalStorage from 'hooks/useLocalStorage';
 
 import { months } from './App';
 import Popup from './Popup';
@@ -14,7 +14,7 @@ type TInput = {
     [date: number]: string;
 };
 
-export default function Event({ currentCalendarDates, currentCalendarMonth }: IProps) {
+export default function DateCells({ currentCalendarDates, currentCalendarMonth }: IProps) {
     const [events, setEvents] = useLocalStorage<TInput>('LOCAL_STORAGE_KEY_FOR_EVENTS', {});
     const [showInputPopup, setShowInputPopup] = useState(false);
 
