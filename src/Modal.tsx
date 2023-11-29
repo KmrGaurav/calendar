@@ -1,19 +1,19 @@
 import useClickOutside from 'hooks/useClickOutside';
 
-interface PopupProps {
+interface ModalProps {
     children: React.ReactNode;
     show: boolean;
     onClose: () => void;
     closeButton?: boolean;
 }
 
-function Popup({ children, show, onClose, closeButton = false }: PopupProps) {
+function Modal({ children, show, onClose, closeButton = false }: ModalProps) {
     const domNode = useClickOutside<HTMLDivElement>({
         callback: onClose
     });
 
     return show ? (
-        <div className="popup" ref={domNode}>
+        <div className="modal" ref={domNode}>
             {closeButton && (
                 <button style={{ alignSelf: 'end', fontSize: '8px', padding: '5px 10px' }} onClick={onClose}>
                     X
@@ -26,4 +26,4 @@ function Popup({ children, show, onClose, closeButton = false }: PopupProps) {
     );
 }
 
-export default Popup;
+export default Modal;

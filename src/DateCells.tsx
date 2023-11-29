@@ -4,7 +4,7 @@ import useLocalStorage from 'hooks/useLocalStorage';
 
 import { getDateNumber } from 'utils';
 import { months } from './App';
-import Popup from './Popup';
+import Modal from './Modal';
 
 interface IProps {
     currentCalendarDates: Date[];
@@ -17,12 +17,12 @@ type TInput = {
 
 export default function DateCells({ currentCalendarDates, currentCalendarMonth }: IProps) {
     const [events, setEvents] = useLocalStorage<TInput>('LOCAL_STORAGE_KEY_FOR_EVENTS', {});
-    const [showInputPopup, setShowInputPopup] = useState(false);
+    const [showInputModal, setShowInputModal] = useState(false);
 
     const [inputDate, setInputDate] = useState<Date>(new Date());
 
     const handleClickOnDate = (date: Date) => {
-        setShowInputPopup(true);
+        setShowInputModal(true);
         setInputDate(date);
     };
 
@@ -55,7 +55,7 @@ export default function DateCells({ currentCalendarDates, currentCalendarMonth }
                 );
             })}
 
-            <Popup show={showInputPopup} onClose={() => setShowInputPopup(false)} closeButton>
+            <Modal show={showInputModal} onClose={() => setShowInputModal(false)} closeButton>
                 <div className="month-year-heading">{`${inputDate.getDate()} ${
                     months[inputDate.getMonth()]
                 } ${inputDate.getFullYear()}`}</div>
@@ -64,7 +64,7 @@ export default function DateCells({ currentCalendarDates, currentCalendarMonth }
                     value={events[getDateNumber(inputDate)]}
                     onChange={handleOnChangeTextarea}
                 />
-            </Popup>
+            </Modal>
         </>
     );
 }

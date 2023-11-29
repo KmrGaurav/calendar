@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
 import useLocalStorage from 'hooks/useLocalStorage';
-import Popup from './Popup';
+import Modal from './Modal';
 import DateCells from './DateCells';
 import { getDateString } from 'utils';
 
-enum PopupMode {
+enum ModalMode {
     Month,
     Year,
     Decade,
@@ -37,8 +37,8 @@ export default function App() {
         return date;
     };
 
-    const [showPopup, setShowPopup] = useState(false);
-    const [popupMode, setPopupMode] = useState(PopupMode.Month);
+    const [showModal, setShowModal] = useState(false);
+    const [modalMode, setModalMode] = useState(ModalMode.Month);
 
     const [showEventsList, setShowEventsList] = useState(true);
     const [events] = useLocalStorage<{ [date: number]: string }>('LOCAL_STORAGE_KEY_FOR_EVENTS', {});
@@ -74,15 +74,15 @@ export default function App() {
         setCurrentCalendarMonth((prev) => (prev + 1) % 12);
     };
 
-    const handleMonthSelectionOnPopup = (month: number) => {
+    const handleMonthSelectionOnModal = (month: number) => {
         setCurrentCalendarMonth(month);
-        setShowPopup(false);
-        setPopupMode(PopupMode.Month);
+        setShowModal(false);
+        setModalMode(ModalMode.Month);
     };
 
-    const handleYearSelectionOnPopup = (year: number) => {
+    const handleYearSelectionOnModal = (year: number) => {
         setCurrentCalendarYear(year);
-        setPopupMode(PopupMode.Month);
+        setModalMode(ModalMode.Month);
     };
     console.log(events);
     return (
@@ -93,7 +93,7 @@ export default function App() {
                     <div className="month-year-heading" onClick={() => setShowEventsList(true)}>
                         Events
                     </div>
-                    <div onClick={() => setShowPopup((prev) => !prev)} className="month-year-heading">
+                    <div onClick={() => setShowModal((prev) => !prev)} className="month-year-heading">
                         {months[currentCalendarMonth]} {currentCalendarYear}
                     </div>
                     <button onClick={onRightClick}>&gt;</button>
@@ -119,14 +119,14 @@ export default function App() {
                 </div>
             </div>
 
-            <Popup
-                show={showPopup}
+            <Modal
+                show={showModal}
                 onClose={() => {
-                    setShowPopup(false);
-                    setPopupMode(PopupMode.Month);
+                    setShowModal(false);
+                    setModalMode(ModalMode.Month);
                 }}
             >
-                {popupMode === PopupMode.Month && (
+                {modalMode === ModalMode.Month && (
                     <>
                         <div
                             style={{
@@ -138,18 +138,18 @@ export default function App() {
                             }}
                         >
                             <button onClick={() => setCurrentCalendarYear((prev) => prev - 1)}>&lt;</button>
-                            <div className="month-year-heading" onClick={() => setPopupMode(PopupMode.Year)}>
+                            <div className="month-year-heading" onClick={() => setModalMode(ModalMode.Year)}>
                                 {currentCalendarYear}
                             </div>
                             <button onClick={() => setCurrentCalendarYear((prev) => prev + 1)}>&gt;</button>
                         </div>
-                        <div className="months-popup">
+                        <div className="months-modal">
                             {months.map((month, index) => {
                                 return (
                                     <div
                                         key={index}
-                                        className="month-popup"
-                                        onClick={() => handleMonthSelectionOnPopup(index)}
+                                        className="month-modal"
+                                        onClick={() => handleMonthSelectionOnModal(index)}
                                     >
                                         {month}
                                     </div>
@@ -158,7 +158,7 @@ export default function App() {
                         </div>
                     </>
                 )}
-                {popupMode === PopupMode.Year && (
+                {modalMode === ModalMode.Year && (
                     <>
                         <div
                             style={{
@@ -176,7 +176,7 @@ export default function App() {
                             </div>
                             <button onClick={() => setCurrentCalendarYear((prev) => prev + 20)}>&gt;</button>
                         </div>
-                        <div className="years-popup">
+                        <div className="years-modal">
                             {Array.from(
                                 { length: 20 },
                                 (_, index) => Math.floor((currentCalendarYear - 1) / 20) * 20 + 1 + index
@@ -184,8 +184,8 @@ export default function App() {
                                 return (
                                     <div
                                         key={year}
-                                        className="year-popup"
-                                        onClick={() => handleYearSelectionOnPopup(year)}
+                                        className="year-modal"
+                                        onClick={() => handleYearSelectionOnModal(year)}
                                     >
                                         {year}
                                     </div>
@@ -194,9 +194,9 @@ export default function App() {
                         </div>
                     </>
                 )}
-            </Popup>
+            </Modal>
 
-            <Popup show={showEventsList} onClose={() => setShowEventsList(false)} closeButton>
+            <Modal show={showEventsList} onClose={() => setShowEventsList(false)} closeButton>
                 <table className="table" style={{ minWidth: '300px' }}>
                     <thead>
                         <tr>
@@ -213,7 +213,7 @@ export default function App() {
                         ))}
                     </tbody>
                 </table>
-            </Popup>
+            </Modal>
         </>
     );
 }
