@@ -83,9 +83,8 @@ body {
   justify-content: space-between;
 
   padding: 10px;
+  gap: 10px;
   border: 2px solid $primary-color;
-
-
 }
 
 button {
@@ -193,4 +192,24 @@ button {
   &:focus {
     border: 2px solid rgba($primary-color, 0.7);
   }
+}
+
+/* MyTable.css */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.table th {
+  background-color: lightblue;
+}
+
+.table td {
+  border: 1px solid #ddd;
 }

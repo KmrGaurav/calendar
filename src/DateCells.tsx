@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import useLocalStorage from 'hooks/useLocalStorage';
 
+import { getDateNumber } from 'utils';
 import { months } from './App';
 import Popup from './Popup';
 
@@ -30,14 +31,6 @@ export default function DateCells({ currentCalendarDates, currentCalendarMonth }
             ...events,
             [getDateNumber(inputDate)]: e.target.value
         });
-    };
-
-    const getDateNumber = (date: Date) => {
-        return Number(
-            date.getFullYear().toString() +
-                date.getMonth().toString().padStart(2, '0') +
-                date.getDate().toString().padStart(2, '0')
-        );
     };
 
     return (

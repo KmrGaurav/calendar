@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 
+import useLocalStorage from 'hooks/useLocalStorage';
 import Popup from './Popup';
 import DateCells from './DateCells';
+import { getDateString } from 'utils';
 
 enum PopupMode {
     Month,
@@ -37,6 +39,9 @@ export default function App() {
 
     const [showPopup, setShowPopup] = useState(false);
     const [popupMode, setPopupMode] = useState(PopupMode.Month);
+
+    const [showEventsList, setShowEventsList] = useState(true);
+    const [events] = useLocalStorage<{ [date: number]: string }>('LOCAL_STORAGE_KEY_FOR_EVENTS', {});
 
     const [currentCalendarDates, setCurrentCalendarDates] = useState<Date[]>([]);
 
@@ -79,121 +84,136 @@ export default function App() {
         setCurrentCalendarYear(year);
         setPopupMode(PopupMode.Month);
     };
-
+    console.log(events);
     return (
-        <div>
-            <div className="controller">
-                <button onClick={onLeftClick}>&lt;</button>
-
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center'
-                    }}
-                >
+        <>
+            <div>
+                <div className="controller">
+                    <button onClick={onLeftClick}>&lt;</button>
+                    <div className="month-year-heading" onClick={() => setShowEventsList(true)}>
+                        Events
+                    </div>
                     <div onClick={() => setShowPopup((prev) => !prev)} className="month-year-heading">
                         {months[currentCalendarMonth]} {currentCalendarYear}
                     </div>
-
-                    <Popup
-                        show={showPopup}
-                        onClose={() => {
-                            setShowPopup(false);
-                            setPopupMode(PopupMode.Month);
-                        }}
-                    >
-                        {popupMode === PopupMode.Month && (
-                            <>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        width: '100%',
-                                        gap: '10px'
-                                    }}
-                                >
-                                    <button onClick={() => setCurrentCalendarYear((prev) => prev - 1)}>&lt;</button>
-                                    <div className="month-year-heading" onClick={() => setPopupMode(PopupMode.Year)}>
-                                        {currentCalendarYear}
-                                    </div>
-                                    <button onClick={() => setCurrentCalendarYear((prev) => prev + 1)}>&gt;</button>
-                                </div>
-                                <div className="months-popup">
-                                    {months.map((month, index) => {
-                                        return (
-                                            <div
-                                                key={index}
-                                                className="month-popup"
-                                                onClick={() => handleMonthSelectionOnPopup(index)}
-                                            >
-                                                {month}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </>
-                        )}
-                        {popupMode === PopupMode.Year && (
-                            <>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        width: '100%',
-                                        gap: '10px'
-                                    }}
-                                >
-                                    <button onClick={() => setCurrentCalendarYear((prev) => prev - 20)}>&lt;</button>
-                                    <div className="month-year-heading">
-                                        {Math.floor((currentCalendarYear - 1) / 20) * 20 + 1} -{' '}
-                                        {Math.floor((currentCalendarYear - 1) / 20) * 20 + 20}
-                                    </div>
-                                    <button onClick={() => setCurrentCalendarYear((prev) => prev + 20)}>&gt;</button>
-                                </div>
-                                <div className="years-popup">
-                                    {Array.from(
-                                        { length: 20 },
-                                        (_, index) => Math.floor((currentCalendarYear - 1) / 20) * 20 + 1 + index
-                                    ).map((year) => {
-                                        return (
-                                            <div
-                                                key={year}
-                                                className="year-popup"
-                                                onClick={() => handleYearSelectionOnPopup(year)}
-                                            >
-                                                {year}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </>
-                        )}
-                    </Popup>
+                    <button onClick={onRightClick}>&gt;</button>
                 </div>
-                <button onClick={onRightClick}>&gt;</button>
+
+                <div className="calendar">
+                    <div className="days-row">
+                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => {
+                            return (
+                                <div className="day-heading" key={day}>
+                                    {day}
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div className="dates">
+                        <DateCells
+                            currentCalendarDates={currentCalendarDates}
+                            currentCalendarMonth={currentCalendarMonth}
+                        />
+                    </div>
+                </div>
             </div>
 
-            <div className="calendar">
-                <div className="days-row">
-                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => {
-                        return (
-                            <div className="day-heading" key={day}>
-                                {day}
+            <Popup
+                show={showPopup}
+                onClose={() => {
+                    setShowPopup(false);
+                    setPopupMode(PopupMode.Month);
+                }}
+            >
+                {popupMode === PopupMode.Month && (
+                    <>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                gap: '10px'
+                            }}
+                        >
+                            <button onClick={() => setCurrentCalendarYear((prev) => prev - 1)}>&lt;</button>
+                            <div className="month-year-heading" onClick={() => setPopupMode(PopupMode.Year)}>
+                                {currentCalendarYear}
                             </div>
-                        );
-                    })}
-                </div>
+                            <button onClick={() => setCurrentCalendarYear((prev) => prev + 1)}>&gt;</button>
+                        </div>
+                        <div className="months-popup">
+                            {months.map((month, index) => {
+                                return (
+                                    <div
+                                        key={index}
+                                        className="month-popup"
+                                        onClick={() => handleMonthSelectionOnPopup(index)}
+                                    >
+                                        {month}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </>
+                )}
+                {popupMode === PopupMode.Year && (
+                    <>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                gap: '10px'
+                            }}
+                        >
+                            <button onClick={() => setCurrentCalendarYear((prev) => prev - 20)}>&lt;</button>
+                            <div className="month-year-heading">
+                                {Math.floor((currentCalendarYear - 1) / 20) * 20 + 1} -{' '}
+                                {Math.floor((currentCalendarYear - 1) / 20) * 20 + 20}
+                            </div>
+                            <button onClick={() => setCurrentCalendarYear((prev) => prev + 20)}>&gt;</button>
+                        </div>
+                        <div className="years-popup">
+                            {Array.from(
+                                { length: 20 },
+                                (_, index) => Math.floor((currentCalendarYear - 1) / 20) * 20 + 1 + index
+                            ).map((year) => {
+                                return (
+                                    <div
+                                        key={year}
+                                        className="year-popup"
+                                        onClick={() => handleYearSelectionOnPopup(year)}
+                                    >
+                                        {year}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </>
+                )}
+            </Popup>
 
-                <div className="dates">
-                    <DateCells
-                        currentCalendarDates={currentCalendarDates}
-                        currentCalendarMonth={currentCalendarMonth}
-                    />
-                </div>
-            </div>
-        </div>
+            <Popup show={showEventsList} onClose={() => setShowEventsList(false)} closeButton>
+                <table className="table" style={{ minWidth: '300px' }}>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {Object.entries(events).map(([date, value]) => (
+                            <tr key={date}>
+                                <td>{getDateString(date)}</td>
+                                <td>{value}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </Popup>
+        </>
     );
 }
