@@ -1,215 +1,217 @@
-$primary-color: #3498db;
+.theme-light {
+    --primary-color: #3498db;
+    --lightblue: #95cfe2;
+    --hover-color: var(--primary-color);
+    --hover-bg-color: #ffffff;
+    --modal-bg-color: #ffffff;
+    --modal-border-color: var(--primary-color);
+    --event-border-color: var(--primary-color);
+    --text-color: #000000;
+    --text-color-hover: #ffffff;
+    --background-color: #ffffff;
+    --dimmed-color: #d3d3d3;
+}
+
+.theme-dark {
+    --primary-color: #3498db;
+    --lightblue: #39849d; /* Adjust as needed */
+    --hover-color: var(--primary-color);
+    --hover-bg-color: #1a1a1a; /* Adjust as needed */
+    --modal-bg-color: #2c2c2c; /* Adjust as needed */
+    --modal-border-color: var(--primary-color);
+    --event-border-color: var(--primary-color);
+    --text-color: #ffffff; /* Light text color on dark background */
+    --text-color-hover: #ffffff;
+    --background-color: #404040;
+    --dimmed-color: #303030;
+}
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: sans-serif;
-
-  max-height: 90vh;
-  aspect-ratio: 1 / 1;
-  margin: 10px auto;
+    font-family: sans-serif;
+    max-height: 90vh;
+    aspect-ratio: 1 / 1;
+    margin: 10px auto;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 .calendar {
-  border: 2px solid $primary-color;
+    border: 2px solid var(--primary-color);
 }
 
 .month-year-heading {
-  width: 100%;
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  border: 2px solid $primary-color;
-  border-radius: 5px;
-  color: $primary-color;
-  border-radius: 3px;
-  transition: background-color 0.3s, color 0.3s;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    color: var(--primary-color);
+    border-radius: 3px;
+    transition: background-color 0.3s, color 0.3s;
 
-  &:hover {
-    background-color: $primary-color;
-    color: #ffffff;
-  }
+    &:hover {
+        background-color: var(--hover-color);
+        color: var(--hover-bg-color);
+    }
 }
 
 .days-row {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
 
-  background-color: lightblue;
-  // border: 1px solid rgb(59, 59, 128);
+    background-color: var(--lightblue);
 }
 
 .day-heading {
-  padding: 10px;
-  width: 100%;
-  // aspect-ratio : 1 / 1;
-
-  // border: 1px solid green;
+    padding: 10px;
+    width: 100%;
 }
 
 .dates {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-
-  // border: 1px solid red;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
 }
 
 .date {
-  padding: 10px;
-  width: 100%;
-  aspect-ratio: 1 / 1;
+    padding: 10px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
 
-  &:hover {
-    background-color: rgba($primary-color, 0.6);
-    transition: background-color 0.3s, color 0.3s;
-  }
+    &:hover {
+        background-color: var(--hover-color);
+        transition: background-color 0.3s, color 0.3s;
+    }
 }
 
 .greyed {
-  background-color: lightgrey;
+    background-color: var(--dimmed-color);
 }
 
 .current-date {
-  background-color: rgba($primary-color, 0.7);
+    background-color: var(--primary-color);
 }
 
 .controller {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-
-  padding: 10px;
-  gap: 10px;
-  border: 2px solid $primary-color;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px;
+    gap: 10px;
+    border: 2px solid var(--primary-color);
 }
 
 button {
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-  cursor: pointer;
-  border: 2px solid $primary-color;
-  /* Border color */
-  border-radius: 3px;
-  /* Rounded corners */
-  background-color: $primary-color;
-  /* Background color */
-  color: #ffffff;
-  /* Text color */
-  transition: background-color 0.3s, color 0.3s;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid var(--primary-color);
+    border-radius: 3px;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    transition: background-color 0.3s, color 0.3s;
 
-  &:hover {
-    background-color: #ffffff;
-    /* Hover background color */
-    color: $primary-color;
-    /* Hover text color */
-  }
+    &:hover {
+        background-color: var(--hover-bg-color);
+        color: var(--primary-color);
+    }
 }
 
 .modal {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  padding: 8px;
-  /* Increased padding for a more spacious feel */
-  gap: 10px;
-
-  background-color: #ffffff;
-  /* Use hex code for color */
-  border: 1px solid rgba($primary-color, 0.6);
-  /* Use hex code for color */
-  border-radius: 10px;
-
-  box-shadow: 6px 6px 4px rgba(0, 0, 0, 0.2);
-  /* Add a subtle box shadow for depth */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 8px;
+    gap: 10px;
+    background-color: var(--modal-bg-color);
+    border: 1px solid var(--modal-border-color);
+    border-radius: 10px;
+    box-shadow: 6px 6px 4px rgba(0, 0, 0, 0.2);
 }
 
 .months-modal {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
 }
 
 .month-modal {
-  width: 100px;
-  padding: 20px 10px;
-  text-align: center;
-  border: 2px solid $primary-color;
-  border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s;
-  color: $primary-color;
+    width: 100px;
+    padding: 20px 10px;
+    text-align: center;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    color: var(--primary-color);
 
-  &:hover {
-    background-color: rgba($primary-color, 0.7);
-    color: #ffffff;
-    cursor: pointer;
-  }
+    &:hover {
+        background-color: var(--primary-color);
+        color: var(--text-color-hover);
+        cursor: pointer;
+    }
 }
 
-
 .years-modal {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
 }
 
 .year-modal {
-  padding: 20px 10px;
-  text-align: center;
-  border: 2px solid $primary-color;
-  border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s;
-  color: $primary-color;
+    padding: 20px 10px;
+    text-align: center;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    color: var(--primary-color);
 
-  &:hover {
-    background-color: rgba($primary-color, 0.7);
-    color: #ffffff;
-    cursor: pointer;
-  }
+    &:hover {
+        background-color: rgba(var(--primary-color), 0.7);
+        color: #ffffff;
+        cursor: pointer;
+    }
 }
 
 .event {
-  min-height: 30vh;
-  min-width: 30vw;
+    min-height: 30vh;
+    min-width: 30vw;
+    padding: 10px;
+    line-height: 1.6;
+    border: 2px solid var(--modal-border-color);
+    color: var(--primary-color);
 
-  padding: 10px;
-  line-height: 1.6;
-
-  border: 2px solid rgba($primary-color, 0.7);
-  color: $primary-color;
-
-  &:focus {
-    border: 2px solid rgba($primary-color, 0.7);
-  }
+    &:focus {
+        border: 2px solid var(--event-border-color);
+    }
 }
 
-/* MyTable.css */
 .table {
-  width: 100%;
-  border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .table th,
 .table td {
-  padding: 10px;
-  text-align: left;
+    padding: 10px;
+    text-align: left;
 }
 
 .table th {
-  background-color: lightblue;
+    background-color: var(--lightblue);
 }
 
 .table td {
-  border: 1px solid #ddd;
+    border: 1px solid #ddd;
 }

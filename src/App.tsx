@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import useLocalStorage from 'hooks/useLocalStorage';
+import useTheme from 'hooks/useTheme';
 import Modal from './Modal';
 import DateCells from './DateCells';
 import { getDateString } from 'utils';
@@ -40,8 +41,11 @@ export default function App() {
     const [showModal, setShowModal] = useState(false);
     const [modalMode, setModalMode] = useState(ModalMode.Month);
 
-    const [showEventsList, setShowEventsList] = useState(true);
+    const [showEventsList, setShowEventsList] = useState(false);
     const [events] = useLocalStorage<{ [date: number]: string }>('LOCAL_STORAGE_KEY_FOR_EVENTS', {});
+
+    const [showThemeModal, setShowThemeModal] = useState(false);
+    const [theme, setTheme] = useTheme();
 
     const [currentCalendarDates, setCurrentCalendarDates] = useState<Date[]>([]);
 
@@ -59,6 +63,10 @@ export default function App() {
         }
         setCurrentCalendarDates(list);
     }, [currentCalendarYear, currentCalendarMonth]);
+
+    useEffect(() => {
+        document.body.className = theme;
+    }, [theme]);
 
     const onLeftClick = () => {
         if (currentCalendarMonth === 0) {
@@ -84,7 +92,7 @@ export default function App() {
         setCurrentCalendarYear(year);
         setModalMode(ModalMode.Month);
     };
-    console.log(events);
+    console.log(theme);
     return (
         <>
             <div>
@@ -95,6 +103,9 @@ export default function App() {
                     </div>
                     <div onClick={() => setShowModal((prev) => !prev)} className="month-year-heading">
                         {months[currentCalendarMonth]} {currentCalendarYear}
+                    </div>
+                    <div onClick={() => setShowThemeModal((prev) => !prev)} className="month-year-heading">
+                        Theme
                     </div>
                     <button onClick={onRightClick}>&gt;</button>
                 </div>
@@ -213,6 +224,32 @@ export default function App() {
                         ))}
                     </tbody>
                 </table>
+            </Modal>
+
+            <Modal show={showThemeModal} onClose={() => setShowThemeModal(false)} closeButton>
+                <div style={{ width: '100px', height: '50px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: '5px' }}>
+                        <input
+                            type="radio"
+                            name="theme"
+                            onChange={() => setTheme('theme-light')}
+                            id="theme-light"
+                            checked={theme === 'theme-light'}
+                        />
+                        <label htmlFor="theme-light">Light</label>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: '5px' }}>
+                        <input
+                            type="radio"
+                            name="theme"
+                            onChange={() => setTheme('theme-dark')}
+                            id="theme-dark"
+                            checked={theme === 'theme-dark'}
+                        />
+                        <label htmlFor="theme-dark">Dark</label>
+                    </div>
+                </div>
             </Modal>
         </>
     );
