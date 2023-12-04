@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import useLocalStorage from 'hooks/useLocalStorage';
+import { getDateString } from 'utils';
+import useEvents from 'hooks/useEvents';
 import useTheme from 'hooks/useTheme';
 import Modal from './Modal';
 import DateCells from './DateCells';
-import { getDateString } from 'utils';
 
 enum ModalMode {
     Month,
@@ -42,7 +42,7 @@ export default function App() {
     const [modalMode, setModalMode] = useState(ModalMode.Month);
 
     const [showEventsList, setShowEventsList] = useState(false);
-    const [events] = useLocalStorage<{ [date: number]: string }>('LOCAL_STORAGE_KEY_FOR_EVENTS', {});
+    const [events] = useEvents();
 
     const [showThemeModal, setShowThemeModal] = useState(false);
     const [theme, setTheme] = useTheme();

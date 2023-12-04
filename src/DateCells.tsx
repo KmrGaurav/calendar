@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
-import useLocalStorage from 'hooks/useLocalStorage';
-
 import { getDateNumber } from 'utils';
+import useEvents from 'hooks/useEvents';
 import { months } from './App';
 import Modal from './Modal';
 
@@ -16,7 +15,7 @@ type TInput = {
 };
 
 export default function DateCells({ currentCalendarDates, currentCalendarMonth }: IProps) {
-    const [events, setEvents] = useLocalStorage<TInput>('LOCAL_STORAGE_KEY_FOR_EVENTS', {});
+    const [events, setEvents] = useEvents();
     const [showInputModal, setShowInputModal] = useState(false);
 
     const [inputDate, setInputDate] = useState<Date>(new Date());

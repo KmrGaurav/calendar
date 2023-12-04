@@ -1,4 +1,4 @@
-import useLocalStorage from './useLocalStorage';
+import useLocalStorage from './common/useLocalStorage';
 
 type TTheme = 'theme-light' | 'theme-dark';
 
